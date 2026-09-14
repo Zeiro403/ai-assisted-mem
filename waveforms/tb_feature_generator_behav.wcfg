@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_feature_generator_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_feature_generator" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="111.001 ns"></ZoomEndTime>
+      <Cursor1Time time="28.669 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="251"></NameColumnWidth>
+      <ValueColumnWidth column_width="116"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="12" />
+   <wvobject fp_name="/tb_feature_generator/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/feature_valid" type="logic">
+      <obj_property name="ElementShortName">feature_valid</obj_property>
+      <obj_property name="ObjectShortName">feature_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/current_addr" type="array">
+      <obj_property name="ElementShortName">current_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">current_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/candidate_addr" type="array">
+      <obj_property name="ElementShortName">candidate_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">candidate_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/current_stride" type="array">
+      <obj_property name="ElementShortName">current_stride[6:0]</obj_property>
+      <obj_property name="ObjectShortName">current_stride[6:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/stride_match" type="logic">
+      <obj_property name="ElementShortName">stride_match</obj_property>
+      <obj_property name="ObjectShortName">stride_match</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/recent_cache_miss" type="logic">
+      <obj_property name="ElementShortName">recent_cache_miss</obj_property>
+      <obj_property name="ObjectShortName">recent_cache_miss</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/previous_prefetch_useful" type="logic">
+      <obj_property name="ElementShortName">previous_prefetch_useful</obj_property>
+      <obj_property name="ObjectShortName">previous_prefetch_useful</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/recent_accuracy_high" type="logic">
+      <obj_property name="ElementShortName">recent_accuracy_high</obj_property>
+      <obj_property name="ObjectShortName">recent_accuracy_high</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/features" type="array">
+      <obj_property name="ElementShortName">features[7:0]</obj_property>
+      <obj_property name="ObjectShortName">features[7:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_feature_generator/features_valid" type="logic">
+      <obj_property name="ElementShortName">features_valid</obj_property>
+      <obj_property name="ObjectShortName">features_valid</obj_property>
+   </wvobject>
+</wave_config>

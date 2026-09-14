@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_stride_candidate_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_stride_candidate" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="491.001 ns"></ZoomEndTime>
+      <Cursor1Time time="119.954 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="251"></NameColumnWidth>
+      <ValueColumnWidth column_width="116"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="13" />
+   <wvobject fp_name="/tb_stride_candidate/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/access_valid" type="logic">
+      <obj_property name="ElementShortName">access_valid</obj_property>
+      <obj_property name="ObjectShortName">access_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/access_addr" type="array">
+      <obj_property name="ElementShortName">access_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">access_addr[5:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/candidate_addr" type="array">
+      <obj_property name="ElementShortName">candidate_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">candidate_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/candidate_valid" type="logic">
+      <obj_property name="ElementShortName">candidate_valid</obj_property>
+      <obj_property name="ObjectShortName">candidate_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/current_stride" type="array">
+      <obj_property name="ElementShortName">current_stride[6:0]</obj_property>
+      <obj_property name="ObjectShortName">current_stride[6:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/stride_match" type="logic">
+      <obj_property name="ElementShortName">stride_match</obj_property>
+      <obj_property name="ObjectShortName">stride_match</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/history_valid" type="logic">
+      <obj_property name="ElementShortName">history_valid</obj_property>
+      <obj_property name="ObjectShortName">history_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/dut/previous_addr" type="array">
+      <obj_property name="ElementShortName">previous_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">previous_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/dut/previous_stride" type="array">
+      <obj_property name="ElementShortName">previous_stride[6:0]</obj_property>
+      <obj_property name="ObjectShortName">previous_stride[6:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/dut/have_previous_addr" type="logic">
+      <obj_property name="ElementShortName">have_previous_addr</obj_property>
+      <obj_property name="ObjectShortName">have_previous_addr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_stride_candidate/dut/have_previous_stride" type="logic">
+      <obj_property name="ElementShortName">have_previous_stride</obj_property>
+      <obj_property name="ObjectShortName">have_previous_stride</obj_property>
+   </wvobject>
+</wave_config>

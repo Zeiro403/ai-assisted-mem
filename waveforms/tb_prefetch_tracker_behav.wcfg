@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_prefetch_tracker_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_prefetch_tracker" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="471.001 ns"></ZoomEndTime>
+      <Cursor1Time time="471.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="251"></NameColumnWidth>
+      <ValueColumnWidth column_width="116"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="13" />
+   <wvobject fp_name="/tb_prefetch_tracker/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/prefetch_issued" type="logic">
+      <obj_property name="ElementShortName">prefetch_issued</obj_property>
+      <obj_property name="ObjectShortName">prefetch_issued</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/prefetch_addr" type="array">
+      <obj_property name="ElementShortName">prefetch_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">prefetch_addr[5:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/prefetch_features" type="array">
+      <obj_property name="ElementShortName">prefetch_features[7:0]</obj_property>
+      <obj_property name="ObjectShortName">prefetch_features[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/demand_access_valid" type="logic">
+      <obj_property name="ElementShortName">demand_access_valid</obj_property>
+      <obj_property name="ObjectShortName">demand_access_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/demand_addr" type="array">
+      <obj_property name="ElementShortName">demand_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">demand_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/tracker_busy" type="logic">
+      <obj_property name="ElementShortName">tracker_busy</obj_property>
+      <obj_property name="ObjectShortName">tracker_busy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/train_valid" type="logic">
+      <obj_property name="ElementShortName">train_valid</obj_property>
+      <obj_property name="ObjectShortName">train_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/train_features" type="array">
+      <obj_property name="ElementShortName">train_features[7:0]</obj_property>
+      <obj_property name="ObjectShortName">train_features[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/train_target" type="logic">
+      <obj_property name="ElementShortName">train_target</obj_property>
+      <obj_property name="ObjectShortName">train_target</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/prefetch_useful_event" type="logic">
+      <obj_property name="ElementShortName">prefetch_useful_event</obj_property>
+      <obj_property name="ObjectShortName">prefetch_useful_event</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_tracker/prefetch_useless_event" type="logic">
+      <obj_property name="ElementShortName">prefetch_useless_event</obj_property>
+      <obj_property name="ObjectShortName">prefetch_useless_event</obj_property>
+   </wvobject>
+</wave_config>

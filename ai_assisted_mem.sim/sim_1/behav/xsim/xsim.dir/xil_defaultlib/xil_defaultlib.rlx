@@ -1,0 +1,23 @@
+0.7
+2020.2
+May 22 2024
+19:03:11
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/ai_assisted_mem.sim/sim_1/behav/xsim/glbl.v,1708598507,verilog,,,,glbl,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/ai_memory_top.v,1789389500,verilog,,C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/cache_4entry.v,,ai_memory_top,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/cache_4entry.v,1789388147,verilog,,C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/feature_generator.v,,cache_4entry,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/cached_memory.v,1789382663,verilog,,C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/memory_64x16.v,,cached_memory,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/feature_generator.v,1789385469,verilog,,C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/memory_64x16.v,,feature_generator,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/memory_64x16.v,1789381659,verilog,,C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/perceptron.v,,memory_64x16,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/perceptron.v,1789384448,verilog,,C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v,,perceptron,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_engine.v,1789388197,verilog,,C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_prefetch_engine.v,,prefetch_engine,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v,1789386727,verilog,,C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/stride_candidate.v,,prefetch_tracker,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/stride_candidate.v,1789389848,verilog,,C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_ai_memory_top.v,,stride_candidate,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_ai_memory_top.v,1789388740,verilog,,,,tb_ai_memory_top,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_cache_4entry.v,1789382084,verilog,,,,tb_cache_4entry,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_cached_memory.v,1789382671,verilog,,,,tb_cached_memory,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_feature_generator.v,1789385476,verilog,,,,tb_feature_generator,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_memory_64x16.v,1789381675,verilog,,,,tb_memory_64x16,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_perceptron.v,1789384457,verilog,,,,tb_perceptron,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_prefetch_engine.v,1789388209,verilog,,,,tb_prefetch_engine,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_prefetch_tracker.v,1789386720,verilog,,,,tb_prefetch_tracker,,,,,,,,
+C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_stride_candidate.v,1789384028,verilog,,,,tb_stride_candidate,,,,,,,,

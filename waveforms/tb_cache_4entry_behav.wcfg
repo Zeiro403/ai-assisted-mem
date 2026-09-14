@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_cache_4entry_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_cache_4entry" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="142.001 ns"></ZoomEndTime>
+      <Cursor1Time time="41.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="251"></NameColumnWidth>
+      <ValueColumnWidth column_width="116"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="15" />
+   <wvobject fp_name="/tb_cache_4entry/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/lookup_en" type="logic">
+      <obj_property name="ElementShortName">lookup_en</obj_property>
+      <obj_property name="ObjectShortName">lookup_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/lookup_addr" type="array">
+      <obj_property name="ElementShortName">lookup_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">lookup_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/hit" type="logic">
+      <obj_property name="ElementShortName">hit</obj_property>
+      <obj_property name="ObjectShortName">hit</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/lookup_data" type="array">
+      <obj_property name="ElementShortName">lookup_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">lookup_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/fill_en" type="logic">
+      <obj_property name="ElementShortName">fill_en</obj_property>
+      <obj_property name="ObjectShortName">fill_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/fill_addr" type="array">
+      <obj_property name="ElementShortName">fill_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">fill_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/fill_data" type="array">
+      <obj_property name="ElementShortName">fill_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">fill_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/update_en" type="logic">
+      <obj_property name="ElementShortName">update_en</obj_property>
+      <obj_property name="ObjectShortName">update_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/update_addr" type="array">
+      <obj_property name="ElementShortName">update_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">update_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/update_data" type="array">
+      <obj_property name="ElementShortName">update_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">update_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/dut/valid" type="array">
+      <obj_property name="ElementShortName">valid[0:3]</obj_property>
+      <obj_property name="ObjectShortName">valid[0:3]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/dut/tag" type="array">
+      <obj_property name="ElementShortName">tag[0:3][5:0]</obj_property>
+      <obj_property name="ObjectShortName">tag[0:3][5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_cache_4entry/dut/data" type="array">
+      <obj_property name="ElementShortName">data[0:3][15:0]</obj_property>
+      <obj_property name="ObjectShortName">data[0:3][15:0]</obj_property>
+   </wvobject>
+</wave_config>

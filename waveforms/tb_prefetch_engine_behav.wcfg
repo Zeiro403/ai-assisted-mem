@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_prefetch_engine_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_prefetch_engine" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="86.001 ns"></ZoomEndTime>
+      <Cursor1Time time="86.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="251"></NameColumnWidth>
+      <ValueColumnWidth column_width="116"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="13" />
+   <wvobject fp_name="/tb_prefetch_engine/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/start" type="logic">
+      <obj_property name="ElementShortName">start</obj_property>
+      <obj_property name="ObjectShortName">start</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/candidate_addr" type="array">
+      <obj_property name="ElementShortName">candidate_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">candidate_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/busy" type="logic">
+      <obj_property name="ElementShortName">busy</obj_property>
+      <obj_property name="ObjectShortName">busy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/ram_req" type="logic">
+      <obj_property name="ElementShortName">ram_req</obj_property>
+      <obj_property name="ObjectShortName">ram_req</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/ram_addr" type="array">
+      <obj_property name="ElementShortName">ram_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">ram_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/ram_data" type="array">
+      <obj_property name="ElementShortName">ram_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">ram_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/ram_data_valid" type="logic">
+      <obj_property name="ElementShortName">ram_data_valid</obj_property>
+      <obj_property name="ObjectShortName">ram_data_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/fill_en" type="logic">
+      <obj_property name="ElementShortName">fill_en</obj_property>
+      <obj_property name="ObjectShortName">fill_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/fill_addr" type="array">
+      <obj_property name="ElementShortName">fill_addr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">fill_addr[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/fill_data" type="array">
+      <obj_property name="ElementShortName">fill_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">fill_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_prefetch_engine/prefetch_complete" type="logic">
+      <obj_property name="ElementShortName">prefetch_complete</obj_property>
+      <obj_property name="ObjectShortName">prefetch_complete</obj_property>
+   </wvobject>
+</wave_config>

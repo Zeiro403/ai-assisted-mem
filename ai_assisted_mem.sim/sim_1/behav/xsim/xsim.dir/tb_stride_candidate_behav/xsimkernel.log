@@ -1,0 +1,7 @@
+Running: xsim.dir/tb_stride_candidate_behav/xsimk.exe -simmode gui -wdb tb_stride_candidate_behav.wdb -simrunnum 0 -socket 56254
+Design successfully loaded
+Design Loading Memory Usage: 9856 KB (Peak: 9856 KB)
+Design Loading CPU Usage: 15 ms
+Simulation completed
+Simulation Memory Usage: 10472 KB (Peak: 10472 KB)
+Simulation CPU Usage: 30 ms
