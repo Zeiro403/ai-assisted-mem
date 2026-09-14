@@ -28,6 +28,12 @@ module tb_ai_memory_top;
     wire prefetch_useless_event;
 
     wire [3:0] bootstrap_count;
+    
+    wire demand_ram_read_event;
+    wire prefetch_ram_read_event;
+    
+    wire ml_accept_event;
+    wire ml_reject_event;
 
     integer hits;
     integer misses;
@@ -36,34 +42,42 @@ module tb_ai_memory_top;
     integer useless;
 
 
-    ai_memory_top dut (
+    ai_memory_top #(
+        .PREFETCH_MODE(2)
+    ) dut (
         .clk                     (clk),
         .rst                     (rst),
-
+    
         .req                     (req),
         .we                      (we),
         .addr                    (addr),
         .data_in                 (data_in),
-
+    
         .data_out                (data_out),
         .data_valid              (data_valid),
         .busy                    (busy),
-
+    
         .cache_hit_event         (cache_hit_event),
         .cache_miss_event        (cache_miss_event),
-
+    
         .predicted_addr          (predicted_addr),
         .prediction_valid        (prediction_valid),
-
+    
         .ml_score                (ml_score),
         .ml_decision             (ml_decision),
-
+    
         .prefetch_start_event    (prefetch_start_event),
-
+    
         .prefetch_useful_event   (prefetch_useful_event),
         .prefetch_useless_event  (prefetch_useless_event),
-
-        .bootstrap_count         (bootstrap_count)
+    
+        .bootstrap_count         (bootstrap_count),
+    
+        .demand_ram_read_event   (demand_ram_read_event),
+        .prefetch_ram_read_event (prefetch_ram_read_event),
+    
+        .ml_accept_event         (ml_accept_event),
+        .ml_reject_event         (ml_reject_event)
     );
 
 

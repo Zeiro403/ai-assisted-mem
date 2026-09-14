@@ -1,48 +1,86 @@
 `timescale 1ns / 1ps
 
-module ai_memory_top (
-    input  wire        clk,
-    input  wire        rst,
+module ai_memory_top #(
 
-    input  wire        req,
-    input  wire        we,
-    input  wire [5:0]  addr,
-    input  wire [15:0] data_in,
+    // Operating mode
+    parameter PREFETCH_MODE = 2,
 
-    output reg  [15:0] data_out,
-    output reg         data_valid,
-    output reg         busy,
+    // Memory configuration
+    parameter ADDR_WIDTH = 6,
+    parameter DATA_WIDTH = 16,
 
-    output reg         cache_hit_event,
-    output reg         cache_miss_event,
+    // Cache configuration
+    parameter CACHE_ENTRIES = 4,
 
-    output wire [5:0]  predicted_addr,
-    output wire        prediction_valid,
+    // Prefetch tracking
+    parameter TRACKER_ENTRIES   = 4,
+    parameter PREFETCH_LIFETIME = 8,
 
+    // Predictor
+    parameter PREFETCH_DISTANCE = 2,
+
+    // Feature generation
+    parameter REGION_BITS = 4,
+
+    // ML
+    parameter FEATURE_WIDTH = 8
+
+)(
+    input wire clk,
+    input wire rst,
+
+    // CPU interface
+    input wire                  req,
+    input wire                  we,
+    input wire [ADDR_WIDTH-1:0] addr,
+    input wire [DATA_WIDTH-1:0] data_in,
+
+    output reg [DATA_WIDTH-1:0] data_out,
+    output reg                  data_valid,
+    output reg                  busy,
+
+    // Cache events
+    output reg cache_hit_event,
+    output reg cache_miss_event,
+
+    // Prediction
+    output wire [ADDR_WIDTH-1:0] predicted_addr,
+    output wire                  prediction_valid,
+
+    // ML
     output wire signed [11:0] ml_score,
-    output wire        ml_decision,
+    output wire               ml_decision,
 
-    output reg         prefetch_start_event,
+    // Prefetch
+    output reg  prefetch_start_event,
+    output wire prefetch_useful_event,
+    output wire prefetch_useless_event,
 
-    output wire        prefetch_useful_event,
-    output wire        prefetch_useless_event,
+    output wire [3:0] bootstrap_count,
 
-    output wire [3:0]  bootstrap_count
+    // Benchmarking
+    output reg demand_ram_read_event,
+    output reg prefetch_ram_read_event,
+
+    output reg ml_accept_event,
+    output reg ml_reject_event
 );
+
 
     // ====================================================
     // DEMAND CONTROLLER STATES
     // ====================================================
 
-    localparam D_IDLE     = 3'd0;
-    localparam D_LOOKUP   = 3'd1;
-    localparam D_RAM_REQ  = 3'd2;
-    localparam D_RAM_WAIT = 3'd3;
-    localparam D_FILL     = 3'd4;
-    localparam D_WRITE    = 3'd5;
+    localparam D_IDLE       = 3'd0;
+    localparam D_LOOKUP     = 3'd1;
+    localparam D_RAM_REQ    = 3'd2;
+    localparam D_RAM_WAIT   = 3'd3;
+    localparam D_FILL       = 3'd4;
+    localparam D_WRITE      = 3'd5;
     localparam D_WRITE_DONE = 3'd6;
 
     reg [2:0] demand_state;
+
 
     // ====================================================
     // LATCHED CPU REQUEST
@@ -51,8 +89,9 @@ module ai_memory_top (
     reg [5:0]  req_addr;
     reg [15:0] req_data;
 
+
     // ====================================================
-    // CACHE
+    // CACHE SIGNALS
     // ====================================================
 
     reg         cache_lookup_en;
@@ -68,10 +107,17 @@ module ai_memory_top (
     reg         cache_update_en;
     reg  [5:0]  cache_update_addr;
     reg  [15:0] cache_update_data;
-    
-    reg [5:0] pending_current_addr;
 
-    cache_4entry cache_inst (
+
+    // ====================================================
+    // CACHE INSTANCE
+    // ====================================================
+
+    cache #(
+        .ADDR_WIDTH(ADDR_WIDTH),
+        .DATA_WIDTH(DATA_WIDTH),
+        .CACHE_ENTRIES(CACHE_ENTRIES)
+    ) cache_inst (
         .clk         (clk),
         .rst         (rst),
 
@@ -90,19 +136,29 @@ module ai_memory_top (
         .update_data (cache_update_data)
     );
 
+
     // ====================================================
-    // RAM
+    // RAM SIGNALS
     // ====================================================
 
     reg         ram_en;
     reg         ram_we;
-    reg  [5:0]  ram_addr;
-    reg  [15:0] ram_data_in;
+    reg  [ADDR_WIDTH-1:0]  ram_addr;
+    reg  [DATA_WIDTH-1:0] ram_data_in;
 
-    wire [15:0] ram_data_out;
+    wire [DATA_WIDTH-1:0] ram_data_out;
     wire        ram_data_valid;
 
-    memory_64x16 ram_inst (
+
+    // ====================================================
+    // RAM INSTANCE
+    // ====================================================
+
+    memory #(
+        .ADDR_WIDTH(ADDR_WIDTH),
+        .DATA_WIDTH(DATA_WIDTH),
+        .DEPTH(1 << ADDR_WIDTH)
+    ) ram_inst (
         .clk        (clk),
         .rst        (rst),
 
@@ -116,12 +172,13 @@ module ai_memory_top (
         .data_valid (ram_data_valid)
     );
 
+
     // ====================================================
-    // STRIDE PREDICTOR
+    // STRIDE CANDIDATE GENERATOR
     // ====================================================
 
-    reg         predictor_access_valid;
-    reg  [5:0]  predictor_access_addr;
+    reg        predictor_access_valid;
+    reg [5:0]  predictor_access_addr;
 
     wire [5:0] candidate_addr;
     wire       candidate_valid;
@@ -130,7 +187,11 @@ module ai_memory_top (
     wire              stride_match;
     wire              history_valid;
 
-    stride_candidate predictor_inst (
+
+    stride_candidate #(
+        .ADDR_WIDTH(ADDR_WIDTH),
+        .PREFETCH_DISTANCE(PREFETCH_DISTANCE)
+    ) predictor_inst (
         .clk             (clk),
         .rst             (rst),
 
@@ -142,11 +203,30 @@ module ai_memory_top (
 
         .current_stride  (current_stride),
         .stride_match    (stride_match),
+
         .history_valid   (history_valid)
     );
 
+
     assign predicted_addr   = candidate_addr;
     assign prediction_valid = candidate_valid;
+
+
+    // ====================================================
+    // CANDIDATE PIPELINE REGISTERS
+    //
+    // Preserve both:
+    //   - candidate address
+    //   - address that produced candidate
+    //
+    // across registered feature / ML stages.
+    // ====================================================
+
+    reg [5:0] pending_candidate;
+    reg [5:0] pending_current_addr;
+
+    reg candidate_pending;
+
 
     // ====================================================
     // FEATURE GENERATOR
@@ -156,19 +236,23 @@ module ai_memory_top (
 
     reg recent_cache_miss;
     reg previous_prefetch_useful;
+
     reg recent_accuracy_high;
 
     wire [7:0] feature_vector;
     wire       features_valid;
 
-    feature_generator feature_inst (
+    feature_generator #(
+        .ADDR_WIDTH(ADDR_WIDTH),
+        .REGION_BITS(REGION_BITS)
+    ) feature_inst (
         .clk                      (clk),
         .rst                      (rst),
 
         .feature_valid            (feature_request),
 
         .current_addr             (pending_current_addr),
-        .candidate_addr           (candidate_addr),
+        .candidate_addr           (pending_candidate),
 
         .current_stride           (current_stride),
         .stride_match             (stride_match),
@@ -181,12 +265,13 @@ module ai_memory_top (
         .features_valid           (features_valid)
     );
 
+
     // ====================================================
     // PERCEPTRON
     // ====================================================
 
-    reg        infer_valid;
-    reg [7:0]  infer_features;
+    reg       infer_valid;
+    reg [7:0] infer_features;
 
     wire       decision_valid;
     wire       prefetch_decision;
@@ -196,7 +281,10 @@ module ai_memory_top (
     wire [7:0] tracker_train_features;
     wire       tracker_train_target;
 
-    perceptron perceptron_inst (
+
+    perceptron #(
+        .FEATURE_WIDTH(FEATURE_WIDTH)
+    ) perceptron_inst (
         .clk               (clk),
         .rst               (rst),
 
@@ -212,8 +300,10 @@ module ai_memory_top (
         .train_target      (tracker_train_target)
     );
 
+
     assign ml_score    = perceptron_score;
     assign ml_decision = prefetch_decision;
+
 
     // ====================================================
     // PREFETCH TRACKER
@@ -228,29 +318,36 @@ module ai_memory_top (
 
     wire tracker_busy;
 
-    prefetch_tracker tracker_inst (
-        .clk                    (clk),
-        .rst                    (rst),
 
-        .prefetch_issued        (tracker_prefetch_issued),
-        .prefetch_addr          (tracker_prefetch_addr),
-        .prefetch_features      (tracker_prefetch_features),
+    prefetch_tracker #(
+        .ADDR_WIDTH(ADDR_WIDTH),
+        .FEATURE_WIDTH(FEATURE_WIDTH),
+        .TRACKER_ENTRIES(TRACKER_ENTRIES),
+        .PREFETCH_LIFETIME(PREFETCH_LIFETIME)
+    ) tracker_inst (
+        .clk                     (clk),
+        .rst                     (rst),
 
-        .demand_access_valid    (demand_access_event),
-        .demand_addr            (demand_access_addr),
+        .prefetch_issued         (tracker_prefetch_issued),
+        .prefetch_addr           (tracker_prefetch_addr),
+        .prefetch_features       (tracker_prefetch_features),
 
-        .tracker_busy           (tracker_busy),
+        .demand_access_valid     (demand_access_event),
+        .demand_addr             (demand_access_addr),
 
-        .train_valid            (tracker_train_valid),
-        .train_features         (tracker_train_features),
-        .train_target           (tracker_train_target),
+        .tracker_busy            (tracker_busy),
 
-        .prefetch_useful_event  (prefetch_useful_event),
-        .prefetch_useless_event (prefetch_useless_event)
+        .train_valid             (tracker_train_valid),
+        .train_features          (tracker_train_features),
+        .train_target            (tracker_train_target),
+
+        .prefetch_useful_event   (prefetch_useful_event),
+        .prefetch_useless_event  (prefetch_useless_event)
     );
 
+
     // ====================================================
-    // PREFETCH STATE
+    // PREFETCH CONTROLLER STATES
     // ====================================================
 
     localparam P_IDLE     = 2'd0;
@@ -263,151 +360,232 @@ module ai_memory_top (
     reg [5:0] prefetch_addr_reg;
     reg [7:0] prefetch_features_reg;
 
+
+    // ====================================================
+    // ML BOOTSTRAP
+    // ====================================================
+
     reg [3:0] bootstrap_counter;
 
     assign bootstrap_count = bootstrap_counter;
 
-    // ====================================================
-    // FEATURE / INFERENCE PIPELINE
-    // ====================================================
-
-    reg [5:0] pending_candidate;
-
-    // Candidate must survive across registered stages.
-    reg candidate_pending;
 
     // ====================================================
-    // SIMPLE RECENT ACCURACY
+    // RECENT PREFETCH ACCURACY HISTORY
     //
-    // Four-bit history:
+    // Last four evaluated prefetches:
+    //
     // 1 = useful
     // 0 = useless
     //
-    // accuracy_high = at least 2 useful results out of
-    // last 4 evaluated outcomes.
+    // recent_accuracy_high = at least 2 useful results
+    // among the last four outcomes.
     // ====================================================
 
     reg [3:0] outcome_history;
     reg [2:0] outcome_count;
 
+
     always @(*) begin
 
-        if (outcome_count < 2)
+        if (outcome_count < 2) begin
+
             recent_accuracy_high = 1'b0;
+
+        end
+
         else if (
-            outcome_history[0] +
-            outcome_history[1] +
-            outcome_history[2] +
-            outcome_history[3] >= 2
-        )
+            (
+                outcome_history[0] +
+                outcome_history[1] +
+                outcome_history[2] +
+                outcome_history[3]
+            ) >= 2
+        ) begin
+
             recent_accuracy_high = 1'b1;
-        else
+
+        end
+
+        else begin
+
             recent_accuracy_high = 1'b0;
+
+        end
 
     end
 
+
     // ====================================================
-    // MAIN SEQUENTIAL CONTROL
+    // MAIN CONTROL
     // ====================================================
 
     always @(posedge clk) begin
+
+        // =================================================
+        // RESET
+        // =================================================
 
         if (rst) begin
 
             demand_state   <= D_IDLE;
             prefetch_state <= P_IDLE;
 
-            req_addr <= 0;
-            req_data <= 0;
+            req_addr <= 6'd0;
+            req_data <= 16'd0;
 
-            data_out   <= 0;
-            data_valid <= 0;
-            busy       <= 0;
+            data_out   <= 16'd0;
+            data_valid <= 1'b0;
+            busy       <= 1'b0;
 
-            cache_hit_event  <= 0;
-            cache_miss_event <= 0;
 
-            cache_lookup_en   <= 0;
-            cache_lookup_addr <= 0;
+            // ---------------------------------------------
+            // CACHE
+            // ---------------------------------------------
 
-            cache_fill_en   <= 0;
-            cache_fill_addr <= 0;
-            cache_fill_data <= 0;
+            cache_hit_event  <= 1'b0;
+            cache_miss_event <= 1'b0;
 
-            cache_update_en   <= 0;
-            cache_update_addr <= 0;
-            cache_update_data <= 0;
-            
+            cache_lookup_en   <= 1'b0;
+            cache_lookup_addr <= 6'd0;
+
+            cache_fill_en   <= 1'b0;
+            cache_fill_addr <= 6'd0;
+            cache_fill_data <= 16'd0;
+
+            cache_update_en   <= 1'b0;
+            cache_update_addr <= 6'd0;
+            cache_update_data <= 16'd0;
+
+
+            // ---------------------------------------------
+            // RAM
+            // ---------------------------------------------
+
+            ram_en      <= 1'b0;
+            ram_we      <= 1'b0;
+            ram_addr    <= 6'd0;
+            ram_data_in <= 16'd0;
+
+
+            // ---------------------------------------------
+            // PREDICTOR
+            // ---------------------------------------------
+
+            predictor_access_valid <= 1'b0;
+            predictor_access_addr  <= 6'd0;
+
+
+            // ---------------------------------------------
+            // CANDIDATE PIPELINE
+            // ---------------------------------------------
+
+            pending_candidate    <= 6'd0;
             pending_current_addr <= 6'd0;
 
-            ram_en      <= 0;
-            ram_we      <= 0;
-            ram_addr    <= 0;
-            ram_data_in <= 0;
+            candidate_pending <= 1'b0;
 
-            predictor_access_valid <= 0;
-            predictor_access_addr  <= 0;
 
-            feature_request <= 0;
+            // ---------------------------------------------
+            // FEATURES / ML
+            // ---------------------------------------------
 
-            infer_valid    <= 0;
-            infer_features <= 0;
+            feature_request <= 1'b0;
 
-            tracker_prefetch_issued   <= 0;
-            tracker_prefetch_addr     <= 0;
-            tracker_prefetch_features <= 0;
+            infer_valid    <= 1'b0;
+            infer_features <= 8'd0;
 
-            demand_access_event <= 0;
-            demand_access_addr  <= 0;
 
-            prefetch_addr_reg     <= 0;
-            prefetch_features_reg <= 0;
+            // ---------------------------------------------
+            // TRACKER
+            // ---------------------------------------------
 
-            pending_candidate <= 0;
-            candidate_pending <= 0;
+            tracker_prefetch_issued   <= 1'b0;
+            tracker_prefetch_addr     <= 6'd0;
+            tracker_prefetch_features <= 8'd0;
 
-            bootstrap_counter <= 0;
+            demand_access_event <= 1'b0;
+            demand_access_addr  <= 6'd0;
 
-            recent_cache_miss        <= 0;
-            previous_prefetch_useful <= 0;
 
-            outcome_history <= 0;
-            outcome_count   <= 0;
+            // ---------------------------------------------
+            // PREFETCH
+            // ---------------------------------------------
 
-            prefetch_start_event <= 0;
+            prefetch_addr_reg     <= 6'd0;
+            prefetch_features_reg <= 8'd0;
+
+            prefetch_start_event <= 1'b0;
+
+
+            // ---------------------------------------------
+            // ML BOOTSTRAP / HISTORY
+            // ---------------------------------------------
+
+            bootstrap_counter <= 4'd0;
+
+            recent_cache_miss        <= 1'b0;
+            previous_prefetch_useful <= 1'b0;
+
+            outcome_history <= 4'b0000;
+            outcome_count   <= 3'd0;
+
+
+            // ---------------------------------------------
+            // PERFORMANCE EVENTS
+            // ---------------------------------------------
+
+            demand_ram_read_event   <= 1'b0;
+            prefetch_ram_read_event <= 1'b0;
+
+            ml_accept_event <= 1'b0;
+            ml_reject_event <= 1'b0;
 
         end
 
+
+        // =================================================
+        // NORMAL OPERATION
+        // =================================================
+
         else begin
 
-            // ============================================
-            // DEFAULT ONE-CYCLE SIGNALS
-            // ============================================
+            // =================================================
+            // DEFAULT ONE-CYCLE PULSES
+            // =================================================
 
-            data_valid <= 0;
+            data_valid <= 1'b0;
 
-            cache_hit_event  <= 0;
-            cache_miss_event <= 0;
+            cache_hit_event  <= 1'b0;
+            cache_miss_event <= 1'b0;
 
-            cache_fill_en   <= 0;
-            cache_update_en <= 0;
+            cache_fill_en   <= 1'b0;
+            cache_update_en <= 1'b0;
 
-            ram_en <= 0;
+            ram_en <= 1'b0;
+            ram_we <= 1'b0;
 
-            predictor_access_valid <= 0;
+            predictor_access_valid <= 1'b0;
 
-            feature_request <= 0;
-            infer_valid     <= 0;
+            feature_request <= 1'b0;
+            infer_valid     <= 1'b0;
 
-            tracker_prefetch_issued <= 0;
+            tracker_prefetch_issued <= 1'b0;
 
-            demand_access_event <= 0;
+            demand_access_event <= 1'b0;
 
-            prefetch_start_event <= 0;
+            prefetch_start_event <= 1'b0;
 
-            // ============================================
-            // TRACK PREFETCH OUTCOMES
-            // ============================================
+            demand_ram_read_event   <= 1'b0;
+            prefetch_ram_read_event <= 1'b0;
+
+            ml_accept_event <= 1'b0;
+            ml_reject_event <= 1'b0;
+
+
+            // =================================================
+            // PREFETCH FEEDBACK HISTORY
+            // =================================================
 
             if (prefetch_useful_event) begin
 
@@ -437,42 +615,60 @@ module ai_memory_top (
 
             end
 
-            // ============================================
+
+            // =================================================
             // CPU DEMAND CONTROLLER
-            // ============================================
+            // =================================================
 
             case (demand_state)
 
+                // =============================================
+                // IDLE
+                // =============================================
+
                 D_IDLE: begin
 
-                    busy            <= 0;
-                    cache_lookup_en <= 0;
+                    busy <= 1'b0;
+
+                    cache_lookup_en <= 1'b0;
 
                     if (req) begin
 
                         req_addr <= addr;
                         req_data <= data_in;
 
-                        busy <= 1;
+                        busy <= 1'b1;
 
-                        // Every accepted CPU access is
-                        // visible to tracker.
-                        demand_access_event <= 1;
+
+                        // -------------------------------------
+                        // Tracker observes every accepted
+                        // CPU memory access.
+                        // -------------------------------------
+
+                        demand_access_event <= 1'b1;
                         demand_access_addr  <= addr;
 
-                        // Only reads are used to learn
-                        // access patterns for prefetching.
+
+                        // -------------------------------------
+                        // READ
+                        // -------------------------------------
+
                         if (!we) begin
 
-                            predictor_access_valid <= 1;
+                            predictor_access_valid <= 1'b1;
                             predictor_access_addr  <= addr;
 
-                            cache_lookup_en   <= 1;
+                            cache_lookup_en   <= 1'b1;
                             cache_lookup_addr <= addr;
 
                             demand_state <= D_LOOKUP;
 
                         end
+
+
+                        // -------------------------------------
+                        // WRITE
+                        // -------------------------------------
 
                         else begin
 
@@ -484,31 +680,35 @@ module ai_memory_top (
 
                 end
 
-                // ----------------------------------------
+
+                // =============================================
                 // CACHE LOOKUP
-                // ----------------------------------------
+                // =============================================
 
                 D_LOOKUP: begin
 
-                    cache_lookup_en <= 0;
+                    cache_lookup_en <= 1'b0;
 
                     if (cache_hit) begin
 
                         data_out   <= cache_lookup_data;
-                        data_valid <= 1;
+                        data_valid <= 1'b1;
 
-                        cache_hit_event <= 1;
-                        recent_cache_miss <= 0;
+                        cache_hit_event <= 1'b1;
 
-                        busy <= 0;
+                        recent_cache_miss <= 1'b0;
+
+                        busy <= 1'b0;
+
                         demand_state <= D_IDLE;
 
                     end
 
                     else begin
 
-                        cache_miss_event <= 1;
-                        recent_cache_miss <= 1;
+                        cache_miss_event <= 1'b1;
+
+                        recent_cache_miss <= 1'b1;
 
                         demand_state <= D_RAM_REQ;
 
@@ -516,21 +716,25 @@ module ai_memory_top (
 
                 end
 
-                // ----------------------------------------
-                // REQUEST DEMAND RAM READ
-                // ----------------------------------------
+
+                // =============================================
+                // DEMAND RAM REQUEST
+                // =============================================
 
                 D_RAM_REQ: begin
 
-                    // Demand always gets priority.
+                    // Demand has priority.
                     //
-                    // Wait until no speculative RAM
-                    // transaction is active.
+                    // Wait until speculative transaction
+                    // is no longer active.
+
                     if (prefetch_state == P_IDLE) begin
 
                         ram_en   <= 1'b1;
                         ram_we   <= 1'b0;
                         ram_addr <= req_addr;
+
+                        demand_ram_read_event <= 1'b1;
 
                         demand_state <= D_RAM_WAIT;
 
@@ -538,12 +742,16 @@ module ai_memory_top (
 
                 end
 
-                // ----------------------------------------
-                // WAIT FOR DEMAND RAM
-                // ----------------------------------------
+
+                // =============================================
+                // DEMAND RAM WAIT
+                // =============================================
 
                 D_RAM_WAIT: begin
-                
+
+                    // Keep request asserted until RAM
+                    // produces valid data.
+
                     ram_en   <= 1'b1;
                     ram_we   <= 1'b0;
                     ram_addr <= req_addr;
@@ -556,7 +764,7 @@ module ai_memory_top (
                         cache_fill_en   <= 1'b1;
                         cache_fill_addr <= req_addr;
                         cache_fill_data <= ram_data_out;
-                        
+
                         ram_en <= 1'b0;
 
                         demand_state <= D_FILL;
@@ -565,147 +773,272 @@ module ai_memory_top (
 
                 end
 
-                // ----------------------------------------
-                // DEMAND CACHE FILL COMPLETE
-                // ----------------------------------------
+
+                // =============================================
+                // DEMAND CACHE FILL
+                // =============================================
 
                 D_FILL: begin
 
-                    busy <= 0;
+                    busy <= 1'b0;
+
                     demand_state <= D_IDLE;
 
                 end
 
-                // ----------------------------------------
+
+                // =============================================
                 // WRITE THROUGH
-                // ----------------------------------------
+                // =============================================
 
                 D_WRITE: begin
 
-                    // Do not collide with speculative RAM.
                     if (prefetch_state == P_IDLE) begin
 
-                        ram_en      <= 1;
-                        ram_we      <= 1;
+                        ram_en      <= 1'b1;
+                        ram_we      <= 1'b1;
                         ram_addr    <= req_addr;
                         ram_data_in <= req_data;
 
-                        cache_update_en   <= 1;
+                        cache_update_en   <= 1'b1;
                         cache_update_addr <= req_addr;
                         cache_update_data <= req_data;
-                        
+
                         demand_state <= D_WRITE_DONE;
 
                     end
 
                 end
-                
+
+
+                // =============================================
+                // WRITE COMPLETE
+                // =============================================
+
                 D_WRITE_DONE: begin
 
                     ram_en <= 1'b0;
                     ram_we <= 1'b0;
-                
+
                     busy <= 1'b0;
-                
+
                     demand_state <= D_IDLE;
-                
+
                 end
 
-                default:
+
+                default: begin
+
                     demand_state <= D_IDLE;
+
+                end
 
             endcase
 
-            // ============================================
-            // CANDIDATE → FEATURE PIPELINE
-            // ============================================
 
-            if (candidate_valid && !candidate_pending) begin
+            // =================================================
+            // CANDIDATE → FEATURE PIPELINE
+            // =================================================
+
+            if (
+                candidate_valid &&
+                !candidate_pending
+            ) begin
 
                 pending_candidate <= candidate_addr;
-                pending_current_addr <= predictor_access_addr;
-                
-                candidate_pending <= 1;
 
-                feature_request <= 1;
+                pending_current_addr <=
+                    predictor_access_addr;
+
+                candidate_pending <= 1'b1;
+
+                feature_request <= 1'b1;
 
             end
 
-            // ============================================
-            // FEATURES → PERCEPTRON
-            // ============================================
 
-            if (features_valid && candidate_pending) begin
+            // =================================================
+            // FEATURES → PERCEPTRON
+            // =================================================
+
+            if (
+                features_valid &&
+                candidate_pending
+            ) begin
 
                 infer_features <= feature_vector;
-                infer_valid    <= 1;
+
+                infer_valid <= 1'b1;
 
             end
 
-            // ============================================
-            // ML DECISION → PREFETCH REQUEST
-            // ============================================
 
-            if (decision_valid && candidate_pending) begin
+            // =================================================
+            // ML DECISION / PREFETCH ADMISSION
+            // =================================================
 
-                // Eligible only if nothing else is
-                // currently being tracked/prefetched.
+            if (
+                decision_valid &&
+                candidate_pending
+            ) begin
+
+                // ---------------------------------------------
+                // Need:
+                //
+                // - free tracker slot
+                // - idle prefetch engine
+                // ---------------------------------------------
+
                 if (
                     !tracker_busy &&
                     prefetch_state == P_IDLE
                 ) begin
 
-                    // First 8 opportunities form bootstrap.
-                    if (
-                        bootstrap_counter < 8 ||
-                        prefetch_decision
-                    ) begin
 
-                        prefetch_addr_reg     <= pending_candidate;
-                        prefetch_features_reg <= infer_features;
+                    // =========================================
+                    // MODE 0
+                    // NO PREFETCH
+                    // =========================================
+
+                    if (PREFETCH_MODE == 0) begin
+
+                        // Candidate intentionally ignored.
+
+                    end
+
+
+                    // =========================================
+                    // MODE 1
+                    // CONVENTIONAL STRIDE PREFETCH
+                    // =========================================
+
+                    else if (PREFETCH_MODE == 1) begin
+
+                        prefetch_addr_reg <=
+                            pending_candidate;
+
+                        prefetch_features_reg <=
+                            infer_features;
 
                         prefetch_state <= P_RAM_REQ;
 
-                        prefetch_start_event <= 1;
+                        prefetch_start_event <= 1'b1;
 
-                        if (bootstrap_counter < 8)
+                    end
+
+
+                    // =========================================
+                    // MODE 2
+                    // ML-ASSISTED
+                    // =========================================
+
+                    else begin
+
+                        // -------------------------------------
+                        // BOOTSTRAP
+                        //
+                        // First eight eligible candidates are
+                        // always admitted to generate training
+                        // examples.
+                        // -------------------------------------
+
+                        if (bootstrap_counter < 8) begin
+
+                            prefetch_addr_reg <=
+                                pending_candidate;
+
+                            prefetch_features_reg <=
+                                infer_features;
+
+                            prefetch_state <= P_RAM_REQ;
+
+                            prefetch_start_event <= 1'b1;
+
                             bootstrap_counter <=
                                 bootstrap_counter + 1'b1;
+
+                        end
+
+
+                        // -------------------------------------
+                        // ML ACCEPT
+                        // -------------------------------------
+
+                        else if (prefetch_decision) begin
+
+                            ml_accept_event <= 1'b1;
+
+                            prefetch_addr_reg <=
+                                pending_candidate;
+
+                            prefetch_features_reg <=
+                                infer_features;
+
+                            prefetch_state <= P_RAM_REQ;
+
+                            prefetch_start_event <= 1'b1;
+
+                        end
+
+
+                        // -------------------------------------
+                        // ML REJECT
+                        // -------------------------------------
+
+                        else begin
+
+                            ml_reject_event <= 1'b1;
+
+                        end
 
                     end
 
                 end
 
-                candidate_pending <= 0;
+                // Candidate has now been processed.
+                candidate_pending <= 1'b0;
 
             end
 
-            // ============================================
-            // PREFETCH ENGINE
-            // ============================================
+
+            // =================================================
+            // PREFETCH CONTROLLER
+            // =================================================
 
             case (prefetch_state)
 
+                // =============================================
+                // IDLE
+                // =============================================
+
                 P_IDLE: begin
-                    // Nothing to do.
+
+                    // No action.
+
                 end
 
-                // ----------------------------------------
-                // ISSUE PREFETCH RAM READ
-                // ----------------------------------------
+
+                // =============================================
+                // PREFETCH RAM REQUEST
+                // =============================================
 
                 P_RAM_REQ: begin
 
-                    // Never use RAM while demand path
-                    // requires it.
+                    // Demand traffic always has priority.
+                    //
+                    // Only launch speculative RAM access
+                    // while demand side is not using RAM.
+
                     if (
                         demand_state == D_IDLE ||
                         demand_state == D_LOOKUP
                     ) begin
 
-                        ram_en   <= 1;
-                        ram_we   <= 0;
+                        ram_en   <= 1'b1;
+                        ram_we   <= 1'b0;
                         ram_addr <= prefetch_addr_reg;
+
+                        prefetch_ram_read_event <= 1'b1;
 
                         prefetch_state <= P_RAM_WAIT;
 
@@ -713,9 +1046,10 @@ module ai_memory_top (
 
                 end
 
-                // ----------------------------------------
-                // WAIT FOR PREFETCH DATA
-                // ----------------------------------------
+
+                // =============================================
+                // PREFETCH RAM WAIT
+                // =============================================
 
                 P_RAM_WAIT: begin
 
@@ -725,9 +1059,13 @@ module ai_memory_top (
 
                     if (ram_data_valid) begin
 
-                        cache_fill_en   <= 1;
-                        cache_fill_addr <= prefetch_addr_reg;
-                        cache_fill_data <= ram_data_out;
+                        cache_fill_en <= 1'b1;
+
+                        cache_fill_addr <=
+                            prefetch_addr_reg;
+
+                        cache_fill_data <=
+                            ram_data_out;
 
                         ram_en <= 1'b0;
 
@@ -737,14 +1075,21 @@ module ai_memory_top (
 
                 end
 
-                // ----------------------------------------
-                // PREFETCH IS NOW IN CACHE
-                // ----------------------------------------
+
+                // =============================================
+                // PREFETCH CACHE FILL COMPLETE
+                // =============================================
 
                 P_FILL: begin
 
-                    tracker_prefetch_issued   <= 1;
-                    tracker_prefetch_addr     <= prefetch_addr_reg;
+                    // Data has now been inserted into cache.
+                    // Register it with the feedback tracker.
+
+                    tracker_prefetch_issued <= 1'b1;
+
+                    tracker_prefetch_addr <=
+                        prefetch_addr_reg;
+
                     tracker_prefetch_features <=
                         prefetch_features_reg;
 
@@ -752,8 +1097,12 @@ module ai_memory_top (
 
                 end
 
-                default:
+
+                default: begin
+
                     prefetch_state <= P_IDLE;
+
+                end
 
             endcase
 

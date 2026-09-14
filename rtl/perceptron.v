@@ -1,33 +1,23 @@
 `timescale 1ns / 1ps
 
-module perceptron (
-    input  wire              clk,
-    input  wire              rst,
+module perceptron #(
+    parameter FEATURE_WIDTH = 8
+)(
+    input  wire                     clk,
+    input  wire                     rst,
 
-    // ----------------------------------------------------
-    // INFERENCE INTERFACE
-    // ----------------------------------------------------
+    // Inference
+    input  wire                     infer_valid,
+    input  wire [FEATURE_WIDTH-1:0] features,
 
-    input  wire              infer_valid,
-    input  wire [7:0]        features,
+    output reg                      decision_valid,
+    output reg                      prefetch_decision,
+    output reg signed [11:0]        score,
 
-    output reg               decision_valid,
-    output reg               prefetch_decision,
-    output reg signed [11:0] score,
-
-    // ----------------------------------------------------
-    // TRAINING INTERFACE
-    // ----------------------------------------------------
-
-    input  wire              train_valid,
-
-    // Features belonging to the example being trained.
-    // Later these will be saved when a prediction is made.
-    input  wire [7:0]        train_features,
-
-    // 1 = useful prefetch
-    // 0 = useless prefetch
-    input  wire              train_target
+    // Training
+    input  wire                     train_valid,
+    input  wire [FEATURE_WIDTH-1:0] train_features,
+    input  wire                     train_target
 );
 
     // ----------------------------------------------------
@@ -36,7 +26,7 @@ module perceptron (
 
     reg signed [7:0] bias;
 
-    reg signed [7:0] weight [0:7];
+    reg signed [7:0] weight [0:FEATURE_WIDTH-1];
 
     integer i;
 
@@ -93,7 +83,7 @@ module perceptron (
 
             bias <= 8'sd0;
 
-            for (i = 0; i < 8; i = i + 1)
+            for (i = 0; i < FEATURE_WIDTH; i = i + 1)
                 weight[i] <= 8'sd0;
 
             decision_valid    <= 1'b0;

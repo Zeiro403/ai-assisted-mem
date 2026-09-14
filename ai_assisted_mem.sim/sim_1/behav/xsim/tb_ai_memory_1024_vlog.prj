@@ -1,0 +1,16 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../rtl/ai_memory_top.v" \
+"../../../../rtl/cache_4entry.v" \
+"../../../../rtl/feature_generator.v" \
+"../../../../rtl/memory_64x16.v" \
+"../../../../rtl/perceptron.v" \
+"../../../../rtl/prefetch_tracker.v" \
+"../../../../rtl/stride_candidate.v" \
+"../../../../tb/tb_scalability.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

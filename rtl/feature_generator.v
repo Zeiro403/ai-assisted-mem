@@ -1,26 +1,29 @@
 `timescale 1ns / 1ps
 
-module feature_generator (
-    input  wire              clk,
-    input  wire              rst,
+module feature_generator #(
+    parameter ADDR_WIDTH  = 6,
+    parameter REGION_BITS = 4
+)(
+    input wire clk,
+    input wire rst,
 
-    input  wire              feature_valid,
+    input wire feature_valid,
 
-    input  wire [5:0]        current_addr,
-    input  wire [5:0]        candidate_addr,
+    input wire [ADDR_WIDTH-1:0] current_addr,
+    input wire [ADDR_WIDTH-1:0] candidate_addr,
 
-    input  wire signed [6:0] current_stride,
-    input  wire              stride_match,
+    input wire signed [ADDR_WIDTH:0] current_stride,
 
-    input  wire              recent_cache_miss,
-    input  wire              previous_prefetch_useful,
-    input  wire              recent_accuracy_high,
+    input wire stride_match,
+    input wire recent_cache_miss,
+    input wire previous_prefetch_useful,
+    input wire recent_accuracy_high,
 
-    output reg  [7:0]        features,
-    output reg               features_valid
+    output reg [7:0] features,
+    output reg       features_valid
 );
 
-    reg signed [6:0] abs_stride;
+    reg signed [ADDR_WIDTH:0] abs_stride;
 
 
     always @(*) begin
@@ -97,9 +100,9 @@ module feature_generator (
                 // candidate stays in same 16-word region
                 features[6] <=
                     (
-                        candidate_addr[5:4]
+                        (current_addr >> REGION_BITS)
                         ==
-                        current_addr[5:4]
+                        (candidate_addr >> REGION_BITS)
                     );
 
 

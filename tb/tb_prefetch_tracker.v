@@ -221,6 +221,45 @@ module tb_prefetch_tracker;
             $display("FAIL: Late useful prefetch incorrectly labelled");
 
 
+        $display("");
+        $display("================================");
+        $display("TEST 4: MULTIPLE OUTSTANDING");
+        $display("================================");
+        
+        issue_prefetch(
+            6'd20,
+            8'b11110000
+        );
+        
+        issue_prefetch(
+            6'd22,
+            8'b11001100
+        );
+        
+        issue_prefetch(
+            6'd24,
+            8'b10101010
+        );
+        
+        
+        // Resolve middle prediction first
+        demand_access(6'd22);
+        
+        #1;
+        
+        if (
+            train_valid &&
+            train_target == 1'b1 &&
+            train_features == 8'b11001100
+        )
+            $display(
+                "PASS: Multiple outstanding tracking works"
+            );
+        else
+            $display(
+                "FAIL: Multiple outstanding tracking failed"
+            );
+
         #20;
 
         $display("");

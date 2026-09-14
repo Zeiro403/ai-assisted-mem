@@ -1,7 +1,7 @@
-Running: xsim.dir/tb_prefetch_tracker_behav/xsimk.exe -simmode gui -wdb tb_prefetch_tracker_behav.wdb -simrunnum 0 -socket 50473
+Running: xsim.dir/tb_prefetch_tracker_behav/xsimk.exe -simmode gui -wdb tb_prefetch_tracker_behav.wdb -simrunnum 0 -socket 63878
 Design successfully loaded
-Design Loading Memory Usage: 10720 KB (Peak: 10720 KB)
-Design Loading CPU Usage: 77 ms
+Design Loading Memory Usage: 9848 KB (Peak: 9848 KB)
+Design Loading CPU Usage: 62 ms
 Simulation completed
-Simulation Memory Usage: 11412 KB (Peak: 11412 KB)
-Simulation CPU Usage: 109 ms
+Simulation Memory Usage: 10468 KB (Peak: 10468 KB)
+Simulation CPU Usage: 93 ms

@@ -1,2 +1,7 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_ai_memory_top.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module tb_ai_memory_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_scalability.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_ai_memory_1024
+ERROR: [VRFC 10-9406] system call 'bits' is not allowed in this dialect; use SystemVerilog mode instead [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_scalability.v:282]
+ERROR: [VRFC 10-9406] system call 'bits' is not allowed in this dialect; use SystemVerilog mode instead [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_scalability.v:287]
+ERROR: [VRFC 10-9406] system call 'bits' is not allowed in this dialect; use SystemVerilog mode instead [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_scalability.v:292]
+ERROR: [VRFC 10-9406] system call 'bits' is not allowed in this dialect; use SystemVerilog mode instead [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_scalability.v:297]
+ERROR: [VRFC 10-8530] module 'tb_ai_memory_1024' is ignored due to previous errors [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/tb/tb_scalability.v:3]
