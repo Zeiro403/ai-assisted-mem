@@ -116,7 +116,7 @@ two consecutive strides match.
 
 The final design uses a **prefetch distance of 2**:
 
-\[ A\_{prefetch}=A\_{current}+2`\times `{=tex}stride \]
+\[ A\_{prefetch}=A\_{current}+2`\times`{=tex}stride \]
 
 The distance was introduced because a next-address prediction did not
 leave enough time for the registered prediction, inference, RAM-read,
@@ -302,40 +302,41 @@ of the three operating modes. Five deterministic workloads were used:
 
 ### 7.1 Summary
 
-  ----------------------------------------------------------------------------------
-  Workload     Mode               Hit Rate Avg. Latency      Throughput    Total RAM
-                                               (cycles)   (reads/cycle)        Reads
-  ------------ -------------- ------------ ------------ --------------- ------------
-  Sequential   No Prefetch           0.00%        5.000        0.139738          128
+  ----------------------------------------------------------------------------
+  Workload     Mode             Hit Rate Avg.            Throughput  Total RAM
+                                         Latency      (reads/cycle)      Reads
+                                         (cycles)                   
+  ------------ -------------- ---------- ---------- --------------- ----------
+  Sequential   No Prefetch         0.00% 5.000             0.139738        128
 
-  Sequential   Conventional         41.41%        4.672        0.155907          164
+  Sequential   Conventional       41.41% 4.672             0.155907        164
 
-  Sequential   ML-Assisted          41.41%        4.672        0.155907          164
+  Sequential   ML-Assisted        41.41% 4.672             0.155907        164
 
-  Stride +2    No Prefetch           0.00%        5.000        0.139738          128
+  Stride +2    No Prefetch         0.00% 5.000             0.139738        128
 
-  Stride +2    Conventional         32.03%        4.859        0.149358          168
+  Stride +2    Conventional       32.03% 4.859             0.149358        168
 
-  Stride +2    ML-Assisted          33.59%        4.750        0.152200          162
+  Stride +2    ML-Assisted        33.59% 4.750             0.152200        162
 
-  Reverse      No Prefetch           0.00%        5.000        0.139738          128
+  Reverse      No Prefetch         0.00% 5.000             0.139738        128
 
-  Reverse      Conventional         43.75%        4.594        0.158416          156
+  Reverse      Conventional       43.75% 4.594             0.158416        156
 
-  Reverse      ML-Assisted          43.75%        4.594        0.158416          156
+  Reverse      ML-Assisted        43.75% 4.594             0.158416        156
 
-  Mixed        No Prefetch           0.00%        5.000        0.139738          128
+  Mixed        No Prefetch         0.00% 5.000             0.139738        128
 
-  Mixed        Conventional          0.00%        5.562        0.129555          176
+  Mixed        Conventional        0.00% 5.562             0.129555        176
 
-  Mixed        ML-Assisted           0.00%        5.094        0.137931          136
+  Mixed        ML-Assisted         0.00% 5.094             0.137931        136
 
-  Irregular    No Prefetch           0.00%        5.000        0.139738          128
+  Irregular    No Prefetch         0.00% 5.000             0.139738        128
 
-  Irregular    Conventional          0.00%        5.000        0.139738          128
+  Irregular    Conventional        0.00% 5.000             0.139738        128
 
-  Irregular    ML-Assisted           0.00%        5.000        0.139738          128
-  ----------------------------------------------------------------------------------
+  Irregular    ML-Assisted         0.00% 5.000             0.139738        128
+  ----------------------------------------------------------------------------
 
 All benchmark configurations completed with zero data errors in the
 verified 64 x 16 configuration.
@@ -505,62 +506,181 @@ predictions become unreliable.
 
 ------------------------------------------------------------------------
 
-## 10. Hardware Cost and Power Considerations
+## 10. FPGA Synthesis and Implementation Results
 
-The ML-assisted system necessarily introduces additional hardware
-compared with the baseline:
+The verified 64 x 16 design was synthesized in Vivado for all three
+prefetch policies using the same FPGA target and a 10 ns (100 MHz) clock
+constraint. The complete ML-assisted configuration was then placed and
+routed to verify implementation feasibility and obtain a more realistic
+timing and power estimate.
 
--   perceptron weights and bias,
--   score accumulation logic,
--   feature-generation logic,
--   online weight-update logic,
--   prefetch tracking metadata,
--   prediction history,
--   prefetch-control state.
+### 10.1 Synthesis Comparison
 
-Therefore the ML design is expected to require more FPGA logic resources
-and may increase static and internal dynamic power.
+  -----------------------------------------------------------------------
+  Metric                 Mode 0: No            Mode 1:            Mode 2:
+                           Prefetch       Conventional        ML-Assisted
+  -------------- ------------------ ------------------ ------------------
+  Slice LUTs                    882                934                941
 
-The simulation demonstrates reduced **memory traffic** in selected
-workloads, particularly the mixed workload, but this alone does not
-prove a reduction in total FPGA power. A complete power conclusion
-requires synthesis and device-level power analysis.
+  Slice                       1,408              1,505              1,511
+  Registers /                                          
+  FFs                                                  
 
-The correct engineering trade-off is therefore:
+  WNS                     +1.541 ns          +1.488 ns          +1.548 ns
 
-\[ `\text{prediction/control hardware overhead}`{=tex}
-`\quad `{=tex}`\text{vs.}`{=tex} `\quad`{=tex}
-`\text{latency and unnecessary memory-traffic reduction}`{=tex} \]
+  TNS                      0.000 ns           0.000 ns           0.000 ns
 
-For this small educational 64-word memory, the fixed control overhead
-may be proportionally large. In larger real memory hierarchies,
-backing-memory accesses are typically much more expensive relative to
-small predictor logic; however, that larger-system energy advantage was
-not established by this project and should not be claimed from the
-present results.
+  Timing at 100                Pass               Pass               Pass
+  MHz                                                  
+  -----------------------------------------------------------------------
 
-------------------------------------------------------------------------
+Relative to Mode 0, the instrumented Mode 2 configuration uses 59
+additional LUTs (approximately 6.69%) and 103 additional registers
+(approximately 7.32%). Relative to Mode 1, Mode 2 uses 7 additional LUTs
+(approximately 0.75%) and 6 additional registers (approximately 0.40%).
 
-## 11. Scalability
+These differences must be interpreted carefully. The same top-level
+design exposes prediction and ML debug outputs in every mode, so Vivado
+retains substantial predictor, feature, tracker, and perceptron logic
+even when a mode does not use ML for prefetch admission. Therefore the
+Mode 0/1/2 differences are comparisons of the complete instrumented
+architecture under different policies; they are not the isolated
+physical area cost of adding the perceptron.
 
-The RTL modules were subsequently parameterized for configurable address
-width, data width, cache entries, tracker entries, prefetch lifetime,
-prefetch distance, and feature width.
+### 10.2 ML-Assisted Module-Level Synthesis Utilization
 
-The parameterized architecture was regression-tested at the original 64
-x 16 configuration and reproduced the verified benchmark behavior.
+For Mode 2, hierarchical synthesis reported:
 
-An attempted 1024 x 16 scalability experiment exposed unresolved
-address/data-path issues in the larger test configuration. Therefore the
-submitted results are restricted to the verified 64 x 16 configuration.
-The larger-memory experiment is considered future work rather than being
-reported as a successful result.
+  Module                       LUTs     FFs
+  -------------------------- ------ -------
+  Cache                         117      94
+  Feature generator               3       9
+  Perceptron                    255      86
+  Stride predictor               27      23
+  RAM                           409   1,041
+  Prefetch tracker              108      84
+  Complete `ai_memory_top`      941   1,511
 
-This limitation does not invalidate the verified functional design, but
-it means the current work does **not** establish generalization to
-arbitrary memory capacities or application workloads.
+The perceptron is a significant source of combinational logic but is not
+the dominant source of registers. The RAM accounts for most of the
+sequential storage resources. The 64 x 16 memory contains 1,024 data
+bits and the current resettable behavioral RAM style is implemented
+largely using FPGA registers/LUT logic rather than a block RAM
+primitive. This is an implementation limitation and a clear opportunity
+for future optimization.
 
-------------------------------------------------------------------------
+### 10.3 Post-Implementation Utilization
+
+The complete Mode 2 ML-assisted design was placed and routed
+successfully.
+
+  Resource             Used   Available   Approx. Utilization
+  ----------------- ------- ----------- ---------------------
+  Slice LUTs            928      53,200                 1.74%
+  Slice Registers     1,520     106,400                 1.43%
+  Slices                494      13,300                 3.71%
+  F7 Muxes               16      26,600                \<0.1%
+  F8 Muxes                8      13,300                \<0.1%
+  Bonded I/O             77         200                 38.5%
+  BUFGCTRL                1          32                 3.13%
+
+The post-implementation hierarchical utilization was:
+
+  Module                LUTs   Registers   Slices
+  ------------------- ------ ----------- --------
+  Cache                  115          94       39
+  Feature generator        3           9        7
+  Perceptron             252          86       76
+  Stride predictor        27          30       15
+  RAM                    409       1,041      298
+  Prefetch tracker       106          86       51
+  Complete system        928       1,520      494
+
+The perceptron accounts for approximately 27.2% of total implemented LUT
+usage but only about 5.7% of the registers. The RAM accounts for
+approximately 68.5% of all registers.
+
+### 10.4 Post-Implementation Timing
+
+The implemented Mode 2 design met all specified timing constraints at
+100 MHz:
+
+  Timing Metric                         Result
+  -------------------------------- -----------
+  Worst Negative Slack (WNS)         +1.061 ns
+  Total Negative Slack (TNS)          0.000 ns
+  Worst Hold Slack (WHS)             +0.130 ns
+  Total Hold Slack (THS)              0.000 ns
+  Worst Pulse Width Slack (WPWS)     +4.500 ns
+  Failing endpoints                          0
+
+With a 10 ns target period, the implemented critical-path estimate is
+approximately 8.939 ns, corresponding to an approximate timing-derived
+frequency of 111.9 MHz. This is a timing estimate rather than a measured
+maximum operating frequency. The verified result is that the
+placed-and-routed design closes timing at the required 100 MHz clock.
+
+### 10.5 Post-Implementation Power Estimate
+
+Vivado's power analysis from the implemented netlist reported:
+
+  Power Metric                  Estimate
+  ---------------------- ---------------
+  Total on-chip power            0.113 W
+  Dynamic power             0.008 W (7%)
+  Device static power      0.104 W (93%)
+  Clock dynamic power            0.003 W
+  Signal dynamic power           0.002 W
+  Logic dynamic power            0.002 W
+  I/O dynamic power              0.001 W
+  Junction temperature            26.3 C
+  Ambient temperature             25.0 C
+  Thermal margin                  58.7 C
+
+The report marked the power estimate with **low confidence** because
+activity was derived from constraints, simulation information, or
+vectorless analysis rather than measured workload-specific FPGA
+activity. The 0.113 W figure is therefore treated as an
+implementation-level estimate, not as measured board power.
+
+Static device power dominates the estimate. Consequently, the reduction
+in speculative RAM traffic demonstrated by the ML policy should not be
+equated directly with an equal reduction in total FPGA power.
+
+### 10.6 Hardware/Performance Trade-off
+
+The implementation results establish that the complete ML-assisted
+system is feasible on the selected FPGA: it occupies less than 2% of
+available LUTs and registers and meets the 100 MHz timing requirement
+after placement and routing.
+
+The simulation results simultaneously show why the additional control
+logic can be useful. In the mixed workload, conventional prefetching
+increased total RAM accesses to 176 and average latency to 5.562 cycles.
+The ML-assisted policy reduced total RAM accesses to 136 and average
+latency to 5.094 cycles by rejecting 40 post-bootstrap candidates.
+
+Thus the demonstrated benefit is not universal speedup. It is the
+ability to preserve useful conventional prefetching on regular workloads
+while suppressing harmful speculative traffic when runtime feedback
+indicates that the predictor should not be trusted.
+
+## 11. Scalability and Scope
+
+The RTL modules were parameterized for configurable address width, data
+width, cache entries, tracker entries, prefetch lifetime, prefetch
+distance, and feature width. Regression testing at the verified 64 x 16
+configuration reproduced the original functional and benchmark results.
+
+A larger-memory validation was explored during development but was not
+completed to the same verification standard as the 64 x 16 system. It is
+therefore not included in the reported performance results. The
+submitted conclusions are restricted to the fully verified 64 x 16
+implementation.
+
+The architectural concept is intended to be parameterizable, but this
+work does not claim demonstrated generalization to arbitrary memory
+capacities or real application workloads.
 
 ## 12. Limitations
 
@@ -625,7 +745,8 @@ Possible extensions include:
 ## 14. Conclusion
 
 A complete AI-assisted memory-prefetching prototype was implemented in
-Verilog and verified in simulation. The design combines a cache and RAM
+Verilog, verified in simulation, synthesized, and successfully placed
+and routed on the selected FPGA. The design combines a cache and RAM
 hierarchy with stride-based candidate generation, feature extraction, an
 online-learning perceptron, speculative prefetch control, and
 feedback-based training.
@@ -633,17 +754,29 @@ feedback-based training.
 The experiments show that conventional prefetching is effective on
 regular access patterns but can become harmful on changing patterns
 because of unnecessary memory traffic. The ML-assisted controller
-preserves useful prefetching behavior on sequential and reverse
-patterns, slightly improves the fixed-stride case, and strongly
-suppresses harmful speculative accesses in the mixed workload.
+preserves useful prefetch behavior on sequential and reverse patterns,
+slightly improves the fixed-stride case, and strongly suppresses harmful
+speculative accesses in the mixed workload. In that mixed case, total
+RAM traffic was reduced from 176 to 136 accesses and average latency
+from 5.562 to 5.094 cycles relative to conventional prefetching.
 
-The main contribution is therefore **adaptive online control of a
-conventional hardware prefetcher**, rather than universal address
-prediction or universal performance improvement. The design demonstrates
-that a lightweight learned hardware policy can use runtime feedback to
-change speculative memory behavior without offline retraining.
+The final placed-and-routed ML-assisted implementation used 928 LUTs,
+1,520 registers, and 494 slices, while meeting the 100 MHz timing
+constraint with +1.061 ns worst setup slack and zero failing endpoints.
+Vivado estimated 0.113 W total on-chip power for the implemented
+netlist, although the estimate was reported with low confidence and is
+therefore not treated as measured workload power.
 
-The verified results support the feasibility of the proposed AI-assisted
-decision mechanism while also showing the hardware-overhead,
-workload-dependence, and scalability questions that must be considered
-in a larger implementation.
+The main contribution is **adaptive online control of a conventional
+hardware prefetcher**, rather than universal address prediction or
+universal performance improvement. The design demonstrates that a
+lightweight learned hardware policy can use runtime feedback to preserve
+useful speculation and suppress harmful speculation without offline
+retraining.
+
+The results also identify clear limitations: the candidate generator is
+stride-based, the verified memory hierarchy is small, the workloads are
+synthetic, the behavioral RAM implementation consumes substantial
+register resources, and total power savings have not been experimentally
+established. These limitations define appropriate future work rather
+than changing the verified conclusion of the project.

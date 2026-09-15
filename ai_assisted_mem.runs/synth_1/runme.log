@@ -1,0 +1,330 @@
+
+*** Running vivado
+    with args -log ai_memory_top.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source ai_memory_top.tcl
+
+
+
+****** Vivado v2024.1 (64-bit)
+  **** SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+  **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+  **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+  **** Start of session at: Tue Sep 15 08:37:44 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source ai_memory_top.tcl -notrace
+create_project: Time (s): cpu = 00:00:21 ; elapsed = 00:00:24 . Memory (MB): peak = 501.078 ; gain = 202.082
+Command: read_checkpoint -auto_incremental -incremental {C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/ai_assisted_mem.srcs/utils_1/imports/synth_1/ai_memory_top.dcp}
+INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/ai_assisted_mem.srcs/utils_1/imports/synth_1/ai_memory_top.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top ai_memory_top -part xc7z020clg484-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Device 21-403] Loading part xc7z020clg484-1
+INFO: [Device 21-9227] Part: xc7z020clg484-1 does not have CEAM library.
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 2128
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 1385.402 ; gain = 448.922
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'ai_memory_top' [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/ai_memory_top.v:3]
+INFO: [Synth 8-6157] synthesizing module 'cache' [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/cache_4entry.v:3]
+	Parameter ADDR_WIDTH bound to: 6 - type: integer 
+	Parameter DATA_WIDTH bound to: 16 - type: integer 
+	Parameter CACHE_ENTRIES bound to: 4 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'cache' (0#1) [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/cache_4entry.v:3]
+INFO: [Synth 8-6157] synthesizing module 'memory' [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/memory_64x16.v:3]
+	Parameter ADDR_WIDTH bound to: 6 - type: integer 
+	Parameter DATA_WIDTH bound to: 16 - type: integer 
+	Parameter DEPTH bound to: 64 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'memory' (0#1) [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/memory_64x16.v:3]
+INFO: [Synth 8-6157] synthesizing module 'stride_candidate' [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/stride_candidate.v:3]
+	Parameter ADDR_WIDTH bound to: 6 - type: integer 
+	Parameter PREFETCH_DISTANCE bound to: 2 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'stride_candidate' (0#1) [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/stride_candidate.v:3]
+INFO: [Synth 8-6157] synthesizing module 'feature_generator' [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/feature_generator.v:3]
+	Parameter ADDR_WIDTH bound to: 6 - type: integer 
+	Parameter REGION_BITS bound to: 4 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'feature_generator' (0#1) [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/feature_generator.v:3]
+INFO: [Synth 8-6157] synthesizing module 'perceptron' [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/perceptron.v:3]
+	Parameter FEATURE_WIDTH bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'perceptron' (0#1) [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/perceptron.v:3]
+INFO: [Synth 8-6157] synthesizing module 'prefetch_tracker' [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v:3]
+	Parameter ADDR_WIDTH bound to: 6 - type: integer 
+	Parameter FEATURE_WIDTH bound to: 8 - type: integer 
+	Parameter TRACKER_ENTRIES bound to: 4 - type: integer 
+	Parameter PREFETCH_LIFETIME bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'prefetch_tracker' (0#1) [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v:3]
+INFO: [Synth 8-226] default block is never used [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/ai_memory_top.v:1008]
+INFO: [Synth 8-6155] done synthesizing module 'ai_memory_top' (0#1) [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/ai_memory_top.v:3]
+WARNING: [Synth 8-6014] Unused sequential element fill_match_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/cache_4entry.v:127]
+WARNING: [Synth 8-6014] Unused sequential element new_stride_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/stride_candidate.v:54]
+WARNING: [Synth 8-6014] Unused sequential element predicted_addr_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/stride_candidate.v:55]
+WARNING: [Synth 8-6014] Unused sequential element sum_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/perceptron.v:93]
+WARNING: [Synth 8-6014] Unused sequential element match_found_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v:173]
+WARNING: [Synth 8-6014] Unused sequential element timeout_found_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v:174]
+WARNING: [Synth 8-6014] Unused sequential element match_index_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v:176]
+WARNING: [Synth 8-6014] Unused sequential element timeout_index_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v:177]
+WARNING: [Synth 8-6014] Unused sequential element free_found_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v:309]
+WARNING: [Synth 8-6014] Unused sequential element free_index_reg was removed.  [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/rtl/prefetch_tracker.v:310]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1517.473 ; gain = 580.992
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1517.473 ; gain = 580.992
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:21 ; elapsed = 00:00:23 . Memory (MB): peak = 1517.473 ; gain = 580.992
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.058 . Memory (MB): peak = 1517.473 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/ai_assisted_mem.srcs/constrs_1/new/constraints.xdc]
+Finished Parsing XDC File [C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/ai_assisted_mem.srcs/constrs_1/new/constraints.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 1619.609 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.064 . Memory (MB): peak = 1619.609 ; gain = 0.000
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:43 ; elapsed = 00:00:47 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z020clg484-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:43 ; elapsed = 00:00:47 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:43 ; elapsed = 00:00:47 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'demand_state_reg' in module 'ai_memory_top'
+INFO: [Synth 8-802] inferred FSM for state register 'prefetch_state_reg' in module 'ai_memory_top'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                  P_IDLE |                               00 |                               00
+               P_RAM_REQ |                               01 |                               01
+              P_RAM_WAIT |                               10 |                               10
+                  P_FILL |                               11 |                               11
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'prefetch_state_reg' using encoding 'sequential' in module 'ai_memory_top'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                  D_IDLE |                              000 |                              000
+                D_LOOKUP |                              001 |                              001
+               D_RAM_REQ |                              010 |                              010
+              D_RAM_WAIT |                              011 |                              011
+                  D_FILL |                              100 |                              100
+                 D_WRITE |                              101 |                              101
+            D_WRITE_DONE |                              110 |                              110
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'demand_state_reg' using encoding 'sequential' in module 'ai_memory_top'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:45 ; elapsed = 00:00:49 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	  17 Input   12 Bit       Adders := 1     
+	   2 Input    8 Bit       Adders := 18    
+	   3 Input    7 Bit       Adders := 1     
+	   2 Input    7 Bit       Adders := 1     
+	   2 Input    4 Bit       Adders := 1     
+	   2 Input    3 Bit       Adders := 5     
+	   4 Input    3 Bit       Adders := 1     
+	   2 Input    2 Bit       Adders := 1     
++---Registers : 
+	               16 Bit    Registers := 73    
+	               12 Bit    Registers := 1     
+	                8 Bit    Registers := 18    
+	                7 Bit    Registers := 1     
+	                6 Bit    Registers := 19    
+	                4 Bit    Registers := 2     
+	                3 Bit    Registers := 5     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 43    
++---Muxes : 
+	   2 Input   16 Bit        Muxes := 9     
+	   7 Input   16 Bit        Muxes := 1     
+	   2 Input   12 Bit        Muxes := 8     
+	   2 Input    8 Bit        Muxes := 45    
+	   4 Input    8 Bit        Muxes := 2     
+	   2 Input    7 Bit        Muxes := 1     
+	   2 Input    6 Bit        Muxes := 2     
+	   4 Input    6 Bit        Muxes := 2     
+	   5 Input    5 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 3     
+	   2 Input    3 Bit        Muxes := 13    
+	   7 Input    3 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 6     
+	   4 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 150   
+	   4 Input    1 Bit        Muxes := 8     
+	   7 Input    1 Bit        Muxes := 21    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 220 (col length:60)
+BRAMs: 280 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7129] Port current_addr[3] in module feature_generator is either unconnected or has no load
+WARNING: [Synth 8-7129] Port current_addr[2] in module feature_generator is either unconnected or has no load
+WARNING: [Synth 8-7129] Port current_addr[1] in module feature_generator is either unconnected or has no load
+WARNING: [Synth 8-7129] Port current_addr[0] in module feature_generator is either unconnected or has no load
+WARNING: [Synth 8-7129] Port candidate_addr[3] in module feature_generator is either unconnected or has no load
+WARNING: [Synth 8-7129] Port candidate_addr[2] in module feature_generator is either unconnected or has no load
+WARNING: [Synth 8-7129] Port candidate_addr[1] in module feature_generator is either unconnected or has no load
+WARNING: [Synth 8-7129] Port candidate_addr[0] in module feature_generator is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:19 ; elapsed = 00:01:24 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:37 ; elapsed = 00:01:43 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:01:49 ; elapsed = 00:01:56 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:01:51 ; elapsed = 00:01:57 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:57 ; elapsed = 00:02:03 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:57 ; elapsed = 00:02:04 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:57 ; elapsed = 00:02:04 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:57 ; elapsed = 00:02:04 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:57 ; elapsed = 00:02:04 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:57 ; elapsed = 00:02:04 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |BUFG   |     1|
+|2     |CARRY4 |    29|
+|3     |LUT1   |     5|
+|4     |LUT2   |   124|
+|5     |LUT3   |   152|
+|6     |LUT4   |   132|
+|7     |LUT5   |    69|
+|8     |LUT6   |   619|
+|9     |MUXF7  |    16|
+|10    |MUXF8  |     8|
+|11    |FDRE   |  1511|
+|12    |IBUF   |    26|
+|13    |OBUF   |    51|
++------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:57 ; elapsed = 00:02:04 . Memory (MB): peak = 1619.609 ; gain = 683.129
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 9 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:30 ; elapsed = 00:01:57 . Memory (MB): peak = 1619.609 ; gain = 580.992
+Synthesis Optimization Complete : Time (s): cpu = 00:01:57 ; elapsed = 00:02:04 . Memory (MB): peak = 1619.609 ; gain = 683.129
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.029 . Memory (MB): peak = 1619.609 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 53 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1619.609 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: fd8a7b1e
+INFO: [Common 17-83] Releasing license: Synthesis
+40 Infos, 19 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:02:12 ; elapsed = 00:02:23 . Memory (MB): peak = 1619.609 ; gain = 1111.645
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.007 . Memory (MB): peak = 1619.609 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/ai_assisted_mem.runs/synth_1/ai_memory_top.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file ai_memory_top_utilization_synth.rpt -pb ai_memory_top_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Tue Sep 15 08:40:39 2026...

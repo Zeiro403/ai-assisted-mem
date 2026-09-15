@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Tue Sep 15 08:40:48 2026
+# Process ID: 17772
+# Current directory: C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/ai_assisted_mem.runs/impl_1
+# Command line: vivado.exe -log ai_memory_top.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source ai_memory_top.tcl -notrace
+# Log file: C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/ai_assisted_mem.runs/impl_1/ai_memory_top.vdi
+# Journal file: C:/Users/Devansh Sharma/Code/Projects/ai_assisted_mem/ai_assisted_mem.runs/impl_1\vivado.jou
+# Running On        :HAkCbOOk
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :12th Gen Intel(R) Core(TM) i5-12450H
+# CPU Frequency     :2496 MHz
+# CPU Physical cores:8
+# CPU Logical cores :12
+# Host memory       :16833 MB
+# Swap memory       :4563 MB
+# Total Virtual     :21397 MB
+# Available Virtual :8980 MB
+#-----------------------------------------------------------
+source ai_memory_top.tcl -notrace

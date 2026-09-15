@@ -1,0 +1,179 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
+| Date         : Tue Sep 15 08:41:50 2026
+| Host         : HAkCbOOk running 64-bit major release  (build 9200)
+| Command      : report_control_sets -verbose -file ai_memory_top_control_sets_placed.rpt
+| Design       : ai_memory_top
+| Device       : xc7z020
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |   101 |
+|    Minimum number of control sets                        |   101 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |     0 |
+| Unused register locations in slices containing registers |    80 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |   101 |
+| >= 0 to < 4        |     3 |
+| >= 4 to < 6        |     2 |
+| >= 6 to < 8        |     8 |
+| >= 8 to < 10       |     4 |
+| >= 10 to < 12      |     0 |
+| >= 12 to < 14      |     2 |
+| >= 14 to < 16      |     6 |
+| >= 16              |    76 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |              21 |           12 |
+| No           | No                    | Yes                    |               0 |            0 |
+| No           | Yes                   | No                     |              42 |           23 |
+| Yes          | No                    | No                     |               0 |            0 |
+| Yes          | No                    | Yes                    |               0 |            0 |
+| Yes          | Yes                   | No                     |            1457 |          430 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++----------------+--------------------------------------------------+---------------------------------------+------------------+----------------+--------------+
+|  Clock Signal  |                   Enable Signal                  |            Set/Reset Signal           | Slice Load Count | Bel Load Count | Bels / Slice |
++----------------+--------------------------------------------------+---------------------------------------+------------------+----------------+--------------+
+|  clk_IBUF_BUFG |                                                  | tracker_inst/bootstrap_counter_reg[3] |                1 |              1 |         1.00 |
+|  clk_IBUF_BUFG |                                                  | perceptron_inst/rst                   |                1 |              1 |         1.00 |
+|  clk_IBUF_BUFG | cache_inst/FSM_sequential_demand_state_reg[1]_0  | rst_IBUF                              |                1 |              1 |         1.00 |
+|  clk_IBUF_BUFG | tracker_inst/E[0]                                | rst_IBUF                              |                1 |              4 |         4.00 |
+|  clk_IBUF_BUFG | tracker_inst/prefetch_useless_event_reg_0[0]     | rst_IBUF                              |                1 |              4 |         4.00 |
+|  clk_IBUF_BUFG | cache_lookup_addr                                | rst_IBUF                              |                1 |              6 |         6.00 |
+|  clk_IBUF_BUFG | cache_inst/tag                                   | rst_IBUF                              |                2 |              6 |         3.00 |
+|  clk_IBUF_BUFG | cache_inst/valid                                 | rst_IBUF                              |                2 |              6 |         3.00 |
+|  clk_IBUF_BUFG | predictor_access_valid_reg_n_0                   | rst_IBUF                              |                2 |              6 |         3.00 |
+|  clk_IBUF_BUFG | ram_addr[5]_i_1_n_0                              | rst_IBUF                              |                2 |              6 |         3.00 |
+|  clk_IBUF_BUFG | cache_inst/valid2_out                            | rst_IBUF                              |                3 |              6 |         2.00 |
+|  clk_IBUF_BUFG | cache_inst/valid1_out                            | rst_IBUF                              |                2 |              6 |         3.00 |
+|  clk_IBUF_BUFG | predictor_inst/previous_stride                   | rst_IBUF                              |                3 |              7 |         2.33 |
+|  clk_IBUF_BUFG | predictor_inst/E[0]                              | rst_IBUF                              |                1 |              8 |         8.00 |
+|  clk_IBUF_BUFG | feature_inst/candidate_pending_reg[0]            | rst_IBUF                              |                6 |              8 |         1.33 |
+|  clk_IBUF_BUFG | feature_request                                  | rst_IBUF                              |                5 |              8 |         1.60 |
+|  clk_IBUF_BUFG | tracker_inst/train_valid2_out                    | rst_IBUF                              |                6 |              9 |         1.50 |
+|  clk_IBUF_BUFG | predictor_inst/candidate_addr[5]_i_1_n_0         | rst_IBUF                              |                4 |             12 |         3.00 |
+|  clk_IBUF_BUFG | infer_valid                                      | rst_IBUF                              |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG | tracker_inst/valid25_out                         | rst_IBUF                              |                6 |             14 |         2.33 |
+|  clk_IBUF_BUFG | tracker_prefetch_issued                          | rst_IBUF                              |                2 |             14 |         7.00 |
+|  clk_IBUF_BUFG | tracker_inst/tracked_addr                        | rst_IBUF                              |                3 |             14 |         4.67 |
+|  clk_IBUF_BUFG | tracker_inst/tracked_addr[1][5]_i_1_n_0          | rst_IBUF                              |                5 |             14 |         2.80 |
+|  clk_IBUF_BUFG | tracker_inst/tracked_addr[2][5]_i_1_n_0          | rst_IBUF                              |                5 |             14 |         2.80 |
+|  clk_IBUF_BUFG | perceptron_inst/prefetch_decision_reg_0          | rst_IBUF                              |                2 |             14 |         7.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[6][15]_i_1_n_0                      | rst_IBUF                              |                6 |             16 |         2.67 |
+|  clk_IBUF_BUFG | ram_inst/mem[62][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | cache_inst/data[0][15]_i_1_n_0                   | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[63][15]_i_1_n_0                     | rst_IBUF                              |                8 |             16 |         2.00 |
+|  clk_IBUF_BUFG | ram_inst/E[0]                                    | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | cache_inst/data[1][15]_i_1_n_0                   | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | cache_inst/data[2][15]_i_1_n_0                   | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | cache_inst/data[3][15]_i_1_n_0                   | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/data_out[15]_i_1_n_0                    | rst_IBUF                              |                6 |             16 |         2.67 |
+|  clk_IBUF_BUFG | ram_inst/mem[0][15]_i_1_n_0                      | rst_IBUF                              |                6 |             16 |         2.67 |
+|  clk_IBUF_BUFG | ram_inst/mem[21][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[43][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[47][15]_i_1_n_0                     | rst_IBUF                              |               10 |             16 |         1.60 |
+|  clk_IBUF_BUFG | ram_inst/mem[26][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[49][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[27][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[48][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[28][15]_i_1_n_0                     | rst_IBUF                              |                2 |             16 |         8.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[4][15]_i_1_n_0                      | rst_IBUF                              |                2 |             16 |         8.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[17][15]_i_1_n_0                     | rst_IBUF                              |                2 |             16 |         8.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[52][15]_i_1_n_0                     | rst_IBUF                              |                2 |             16 |         8.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[10][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[53][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[55][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[23][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[35][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[38][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[42][15]_i_1_n_0                     | rst_IBUF                              |                7 |             16 |         2.29 |
+|  clk_IBUF_BUFG | ram_inst/mem[19][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[12][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[1][15]_i_1_n_0                      | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[13][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[18][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[20][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[36][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[39][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[44][15]_i_1_n_0                     | rst_IBUF                              |                7 |             16 |         2.29 |
+|  clk_IBUF_BUFG | ram_inst/mem[45][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[33][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[2][15]_i_1_n_0                      | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[46][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[11][15]_i_1_n_0                     | rst_IBUF                              |                2 |             16 |         8.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[25][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[30][15]_i_1_n_0                     | rst_IBUF                              |                8 |             16 |         2.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[37][15]_i_1_n_0                     | rst_IBUF                              |                2 |             16 |         8.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[24][15]_i_1_n_0                     | rst_IBUF                              |                2 |             16 |         8.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[15][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[50][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[51][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[54][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[56][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[29][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[34][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[40][15]_i_1_n_0                     | rst_IBUF                              |                5 |             16 |         3.20 |
+|  clk_IBUF_BUFG | ram_inst/mem[41][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[14][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[22][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[32][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[31][15]_i_1_n_0                     | rst_IBUF                              |               10 |             16 |         1.60 |
+|  clk_IBUF_BUFG | ram_inst/mem[3][15]_i_1_n_0                      | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[16][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[5][15]_i_1_n_0                      | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[57][15]_i_1_n_0                     | rst_IBUF                              |                2 |             16 |         8.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[60][15]_i_1_n_0                     | rst_IBUF                              |                3 |             16 |         5.33 |
+|  clk_IBUF_BUFG | ram_inst/mem[59][15]_i_1_n_0                     | rst_IBUF                              |                8 |             16 |         2.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[61][15]_i_1_n_0                     | rst_IBUF                              |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG | ram_inst/mem[7][15]_i_1_n_0                      | rst_IBUF                              |                6 |             16 |         2.67 |
+|  clk_IBUF_BUFG | ram_inst/mem[58][15]_i_1_n_0                     | rst_IBUF                              |                6 |             16 |         2.67 |
+|  clk_IBUF_BUFG | ram_inst/mem[8][15]_i_1_n_0                      | rst_IBUF                              |                6 |             16 |         2.67 |
+|  clk_IBUF_BUFG | ram_inst/mem[9][15]_i_1_n_0                      | rst_IBUF                              |               10 |             16 |         1.60 |
+|  clk_IBUF_BUFG |                                                  |                                       |               12 |             21 |         1.75 |
+|  clk_IBUF_BUFG | demand_access_event                              | rst_IBUF                              |                6 |             22 |         3.67 |
+|  clk_IBUF_BUFG | ram_we                                           | rst_IBUF                              |                4 |             22 |         5.50 |
+|  clk_IBUF_BUFG | ram_inst/FSM_sequential_demand_state_reg[2]_0[0] | rst_IBUF                              |                4 |             22 |         5.50 |
+|  clk_IBUF_BUFG |                                                  | rst_IBUF                              |               21 |             40 |         1.90 |
+|  clk_IBUF_BUFG | tracker_inst/tracker_train_valid                 | rst_IBUF                              |               37 |             72 |         1.95 |
++----------------+--------------------------------------------------+---------------------------------------+------------------+----------------+--------------+
+
+
